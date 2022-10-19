@@ -461,7 +461,62 @@ if (
 - add a filter to the `GET /postings` to only get listings with a specific `feeStructure`
 - add `sortBy` request options for `feeStructure`, `feeAmount`, `feeStructure` in the `GET /postings` endpoint
 - check schema compliance when inserting into db also, not just when the request comes in
-- [ ] Story 3
+
+# [x] Story 3
+
+This story requires a new endpoint that will handle the payment. Some users stories require the `GET /postings` endpoint to return additional data, which will happen automatically after we update the schema and refresh the db.
+
+## Assumptions:
+
+- updating an existing database with legal job postings in the legacy format to the new format is out of scope for this story/ticket. this is something that will be handled by a story/ticket outside this assignment, or handled by re-starting with a blank db
+- `GET /postings` does not need to return `Service Unavailable (503)` if the db it is connected to still has listings using the old schema
+- tests **are** required for Story 3 of this assignment
+- unit tests are sufficient for Story 3 of this assignment
+- Swagger documentation or other documentation beyond these notes is not required
+- these assumptions and acceptance criteria below have been verified/confirmed by the product owner
+- the first story mentioned that clients are unauthorised/authenticated users. Since this story requires both the clients and the solicitors to have access to this new endpoint, then this endpoint should not be covered by an authguard
+
+## Security
+
+Due to the assumption above this endpoint should not be secured for this task. While this might be alright for a prototype used as a demo, this endpoint really has to be secured. To do that I would add the same authguard that is present on `POST /postings` as well as add a check on the server that the user submitting this POST is either the solicitor or the client assigned to the job.
+
+## Schema Change:
+
+The schema of a legal job listing needs the following new fields to accomodate this change in requirements:
+
+- An optional `amountPaid` (number) field, present after payment
+- An optional `settlementAmount` (number) field, present after payment on all `No-Win-No-Pay` jobs
+- An optional `paidOn` (date) field, present on all jobs that have been paid. With this field a future developer will be able to derive the exact timeframe a job was in the `unpaid` stage and the wohle status history.
+
+Another option to this schema change would have been to create a new `Payment` schema, separate from the `Posting` schema. I felt like this app is simple enough to not really benefit from that added complexity, but more mature apps possibly would.
+
+A third option would have been to nest all three of these fields under a `payment` field on the `Posting` schema. This would have been a middle ground aproach between the two options above.
+
+## `POST /postings/payment` or `PATCH /postings`
+
+Technically using POST for this endpoint goes against the REST standard, since PATCH should be the verb used to create a change to a resource. POST should technically only be used to create new resources, not update existing resources.
+
+However I think POST fits much better here. For one the request will create a lot of new fields and someone could argue `resources` in this tech stack doesn't necessarily mean a document in the db, it could also mean a field or group of fields in a document.
+
+Thinking ahead, if this prototype ends up successful and we had to scale it, sooner or later the payment information would grow and eventually it will be refactored away from the `Posting` schema and into one of its own. Should that happen the POST request would be more adequate to use for sure.
+
+## `POST /postings/payment`Acceptance Criteria:
+
+- returns `Created (201)` when called with a valid request with the `_id` of an `unpaid` `Fixed-Fee` job
+- returns `Created (201)` when called with a valid request with the `_id` of an `unpaid` `No-Win-No-Fee` job, including with `settlementAmount` field
+- returns `Bad Request (400)` when called with the `_id` not belonging to any job
+- returns `Bad Request (400)` when called on a job that has already been paid, with an appropriate error message in the request body
+- returns `Bad Request (400)` when called on a `No-Win-No-Fee` job with a request lacking a valid `settlementAmount` field
+- returns `Internal Server Error (500)` on a db error
+
+## Future improvements
+
+- e2e testing
+- separate `Payments` schema
+- stripe
+- security (see paragraph above)
+- `status` is no longer really needed and can be removed, since the presence of `paidOn` tracks pretty much the exact same thing
+
 - [ ] Story 4
 - [ ] Story 5
 

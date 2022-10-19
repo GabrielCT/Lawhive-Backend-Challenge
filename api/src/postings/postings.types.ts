@@ -10,6 +10,7 @@ import {
   IsNumber,
   Max,
   ValidateIf,
+  IsMongoId,
 } from 'class-validator';
 
 export class CreatePostingDto {
@@ -79,4 +80,17 @@ export class GetPostingsDto {
   @IsEmail()
   @IsOptional()
   clientEmail: string;
+}
+
+export class PayPostingDto {
+  @IsMongoId()
+  _id: string;
+
+  @IsNumber({
+    allowNaN: false,
+    allowInfinity: false,
+    maxDecimalPlaces: 2,
+  })
+  @IsOptional() // only optional when the job is Fixed-Fee, checked later in the other cases
+  settlementAmount: string;
 }

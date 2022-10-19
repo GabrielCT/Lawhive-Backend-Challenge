@@ -10,7 +10,11 @@ import {
 
 import { JwtAuthGuard } from '../authentication/jwt.authguard';
 import { PostingsService } from './postings.service';
-import { CreatePostingDto, GetPostingsDto } from './postings.types';
+import {
+  CreatePostingDto,
+  GetPostingsDto,
+  PayPostingDto,
+} from './postings.types';
 import { Posting } from './posting.schema';
 
 @Controller('postings')
@@ -35,6 +39,11 @@ export class PostingsController {
       );
     }
     return this.postingsService.create(createPostingDto, req.user.email);
+  }
+
+  @Post('payment')
+  async pay(@Body() payPostingDto: PayPostingDto): Promise<Posting> {
+    return this.postingsService.pay(payPostingDto);
   }
 
   @Get('count')

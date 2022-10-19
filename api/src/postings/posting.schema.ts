@@ -31,6 +31,15 @@ export class Posting {
 
   @Prop({ required: false })
   feePercentage: number;
+
+  @Prop({ required: false })
+  amountPaid: number;
+
+  @Prop({ required: false })
+  settlementAmount: number;
+
+  @Prop({ required: false })
+  paidOn: Date;
 }
 
 export const PostingSchema = SchemaFactory.createForClass(Posting);
