@@ -1,0 +1,10 @@
+{
+    "mongodb": "mongodb://root:root@localhost:27017/",
+    "jwtSecret": "1231234123 jwtSecret (change me)",
+    "googleAuth": {
+        "GOOGLE_CLIENT_ID": "put your GOOGLE_CLIENT_ID here",
+        "GOOGLE_SECRET": "put your GOOGLE_SECRET here",
+        "callbackURL": "http://localhost:4000/google/redirect",
+        "scope": ["email", "profile"]
+    }
+}
