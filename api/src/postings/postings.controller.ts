@@ -5,6 +5,7 @@ import {
   Post,
   UseGuards,
   Request,
+  BadRequestException,
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from '../authentication/jwt.authguard';
@@ -24,6 +25,15 @@ export class PostingsController {
   ): Promise<Posting> {
     // req.user.email should be populated due to the JwtAuthGuard, but a
     // TODO: would be to add a specific check for that in the guard
+
+    if (
+      typeof createPostingDto.feeAmount !== 'undefined' &&
+      typeof createPostingDto.feePercentage !== 'undefined'
+    ) {
+      throw new BadRequestException(
+        'feeAmount and feePercentage must not both be present',
+      );
+    }
     return this.postingsService.create(createPostingDto, req.user.email);
   }
 

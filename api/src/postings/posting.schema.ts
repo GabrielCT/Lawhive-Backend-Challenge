@@ -22,6 +22,15 @@ export class Posting {
 
   @Prop({ required: true, enum: ['unpaid', 'paid'] })
   status: string;
+
+  @Prop({ required: true, enum: ['Fixed-Fee', 'No-Win-No-Fee'] })
+  feeStructure: string;
+
+  @Prop({ required: false })
+  feeAmount: number;
+
+  @Prop({ required: false })
+  feePercentage: number;
 }
 
 export const PostingSchema = SchemaFactory.createForClass(Posting);

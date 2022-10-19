@@ -7,6 +7,9 @@ import {
   IsString,
   Length,
   Min,
+  IsNumber,
+  Max,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreatePostingDto {
@@ -24,6 +27,28 @@ export class CreatePostingDto {
   @IsNotEmpty()
   @IsEmail()
   clientEmail: string;
+
+  @IsString()
+  @IsIn(['Fixed-Fee', 'No-Win-No-Fee'])
+  feeStructure: string;
+
+  @IsNumber({
+    allowNaN: false,
+    allowInfinity: false,
+    maxDecimalPlaces: 2,
+  })
+  @ValidateIf((o) => o.feeStructure === 'Fixed-Fee')
+  feeAmount: number;
+
+  @IsNumber({
+    allowNaN: false,
+    allowInfinity: false,
+    maxDecimalPlaces: 3,
+  })
+  @Max(1.0)
+  @Min(0.0)
+  @ValidateIf((o) => o.feeStructure === 'No-Win-No-Fee')
+  feePercentage: number;
 }
 
 export class GetPostingsDto {
