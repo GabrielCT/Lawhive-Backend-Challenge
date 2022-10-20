@@ -416,7 +416,7 @@ In a similar way we can ensure the adequate companion field is present, by marki
     maxDecimalPlaces: 2,
   })
   @ValidateIf((o) => o.feeStructure === 'Fixed-Fee')
-  feeAmount: number;
+  feeAmount?: number;
 
   @IsNumber({
     allowNaN: false,
@@ -426,7 +426,7 @@ In a similar way we can ensure the adequate companion field is present, by marki
   @Max(1.0)
   @Min(0.0)
   @ValidateIf((o) => o.feeStructure === 'No-Win-No-Fee')
-  feePercentage: number;
+  feePercentage?: number;
 ```
 
 What the above doesn't do however is check that `feeAmount` and `feePercentage` are not both present. To enforce one and only one being present, I have added the following check in the request controller:
@@ -471,7 +471,7 @@ This story requires a new endpoint that will handle the payment. Some users stor
 - updating an existing database with legal job postings in the legacy format to the new format is out of scope for this story/ticket. this is something that will be handled by a story/ticket outside this assignment, or handled by re-starting with a blank db
 - `GET /postings` does not need to return `Service Unavailable (503)` if the db it is connected to still has listings using the old schema
 - tests **are** required for Story 3 of this assignment
-- unit tests are sufficient for Story 3 of this assignment
+- e2e tests are sufficient for Story 3 of this assignment
 - Swagger documentation or other documentation beyond these notes is not required
 - these assumptions and acceptance criteria below have been verified/confirmed by the product owner
 - the first story mentioned that clients are unauthorised/authenticated users. Since this story requires both the clients and the solicitors to have access to this new endpoint, then this endpoint should not be covered by an authguard
@@ -511,11 +511,16 @@ Thinking ahead, if this prototype ends up successful and we had to scale it, soo
 
 ## Future improvements
 
-- e2e testing
 - separate `Payments` schema
 - stripe
 - security (see paragraph above)
 - `status` is no longer really needed and can be removed, since the presence of `paidOn` tracks pretty much the exact same thing
+
+## e2e testing
+
+To run the e2e tests you need to have the local MongoDB running. I considered writing unit tests instead to not have this requirement, but e2e tests are much more comprehensive. A possible future improvement could be to use an in-memory MongoDB instance that starts up with the tests and gets automatically deleted afterwards, to remove the dependency on a pre-existing local MongoDB.
+
+`yarn test:e2e`
 
 - [ ] Story 4
 - [ ] Story 5

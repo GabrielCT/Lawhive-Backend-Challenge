@@ -55,4 +55,6 @@ export class PostingsController {
   async find(@Body() getPostingsDto: GetPostingsDto): Promise<Posting[]> {
     return this.postingsService.find(getPostingsDto);
   }
+
+  // TODO: add get posting by ID endpoint using postingService.findById
 }

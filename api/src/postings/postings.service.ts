@@ -58,7 +58,13 @@ export class PostingsService {
       }
       // ticket should have specified how to round this (whole number, round up, 2dp, etc), leaving as is for now
       // should also not really use floats..
-      const amountPaid = job.feePercentage * job.settlementAmount;
+
+      if (typeof payPostingDto.settlementAmount === 'undefined') {
+        // the dto prop guard ensured this will never happen, but typescript type checker still complains without this
+        throw new InternalServerErrorException();
+      }
+      const amountPaid = job.feePercentage * payPostingDto.settlementAmount;
+
       return this.postingModel.findByIdAndUpdate(payPostingDto._id, {
         amountPaid: amountPaid,
         paidOn: new Date(),
@@ -91,5 +97,9 @@ export class PostingsService {
       .skip(getPostingsDto.offset)
       .limit(getPostingsDto.limit)
       .exec();
+  }
+
+  async findById(_id: string): Promise<Posting> {
+    return this.postingModel.findById(_id);
   }
 }

@@ -39,7 +39,7 @@ export class CreatePostingDto {
     maxDecimalPlaces: 2,
   })
   @ValidateIf((o) => o.feeStructure === 'Fixed-Fee')
-  feeAmount: number;
+  feeAmount?: number;
 
   @IsNumber({
     allowNaN: false,
@@ -49,37 +49,37 @@ export class CreatePostingDto {
   @Max(1.0)
   @Min(0.0)
   @ValidateIf((o) => o.feeStructure === 'No-Win-No-Fee')
-  feePercentage: number;
+  feePercentage?: number;
 }
 
 export class GetPostingsDto {
   @IsInt()
   @Min(1)
   @IsOptional()
-  limit = 20;
+  limit? = 20;
 
   @IsInt()
   @Min(0)
   @IsOptional()
-  offset = 0;
+  offset? = 0;
 
   @IsIn(['title', 'created'])
   @IsOptional()
-  sortBy = 'title';
+  sortBy? = 'title';
 
   @IsIn(['asc', 'desc'])
   @IsOptional()
-  sortOrder = 'asc';
+  sortOrder? = 'asc';
 
   @IsString()
   @IsEmail()
   @IsOptional()
-  posterEmail: string;
+  posterEmail?: string;
 
   @IsString()
   @IsEmail()
   @IsOptional()
-  clientEmail: string;
+  clientEmail?: string;
 }
 
 export class PayPostingDto {
@@ -92,5 +92,5 @@ export class PayPostingDto {
     maxDecimalPlaces: 2,
   })
   @IsOptional() // only optional when the job is Fixed-Fee, checked later in the other cases
-  settlementAmount: string;
+  settlementAmount?: number;
 }

@@ -6,6 +6,8 @@ export type PostingDocument = Posting & Document;
 @Schema()
 export class Posting {
   _id: ObjectId;
+  @Prop({ required: false, type: Number })
+  __v?: ObjectId; // not used anywhere, just needed for the e2e test to not show a fake type error
 
   @Prop({ required: true })
   title: string;
@@ -27,19 +29,19 @@ export class Posting {
   feeStructure: string;
 
   @Prop({ required: false })
-  feeAmount: number;
+  feeAmount?: number;
 
   @Prop({ required: false })
-  feePercentage: number;
+  feePercentage?: number;
 
   @Prop({ required: false })
-  amountPaid: number;
+  amountPaid?: number;
 
   @Prop({ required: false })
-  settlementAmount: number;
+  settlementAmount?: number;
 
   @Prop({ required: false })
-  paidOn: Date;
+  paidOn?: Date;
 }
 
 export const PostingSchema = SchemaFactory.createForClass(Posting);
