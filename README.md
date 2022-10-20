@@ -2,11 +2,11 @@
 
 ## Introduction
 
-You’ve been asked to build a new service that allows a solicitor to create legal job postings, and allows a client to pay for a job that has been undertaken. 
+You’ve been asked to build a new service that allows a solicitor to create legal job postings, and allows a client to pay for a job that has been undertaken.
 
 The challenge has been designed to get progressively more difficult in order to gauge decision making and how a candidate deals with changing requirements and complexity.
 
-You may take as much time as you wish to complete the challenge if you wish to complete all tasks, but we recommend time-boxing your work to 3-4 hours. 
+You may take as much time as you wish to complete the challenge if you wish to complete all tasks, but we recommend time-boxing your work to 3-4 hours.
 
 This is to avoid taking too much of your time, and the amount of time spent on the challenge will be applied contextually. In a shorter timeframe, we do not expect all candidates to complete all tasks.
 
@@ -16,7 +16,7 @@ Also make notes on the trade-offs or weaknesses of your implementation.
 
 Commit the notes you've made in the README.md
 
-After the challenge, we will schedule a follow-up call to talk through your experience, challenges faced, decisions made and your notes. 
+After the challenge, we will schedule a follow-up call to talk through your experience, challenges faced, decisions made and your notes.
 
 ## How we assess the challenge
 
@@ -24,7 +24,7 @@ We're looking for how you think about building products and systems. What this m
 
 In practice, this includes:
 
-- Architecture/tool/library decisions 
+- Architecture/tool/library decisions
 - Code structure and cleanliness
 - Domain modelling decisions and abstraction choices
 - Use of best-practices and principles (validation, auth, security)
@@ -34,8 +34,8 @@ In practice, this includes:
 - When to use reach for libraries to solve problems vs. when to write code
 
 It does **not** include:
-- 100% test coverage
 
+- 100% test coverage
 
 ## How to submit your answers
 
@@ -57,35 +57,35 @@ Should you need help or any clarification, feel free to email us.
 
 - The completed project should have a backend API and a data persistance layer.
 
-
 We've provided initial "hello world" implementations of an API for you to work with. Please use this to start with, and feel free to make any changes you see fit for your solutions.
 
 ```bash
 # NestJS based API
 /api
 
-# Basic database setup 
+# Basic database setup
 docker-compose.yml
 ```
 
-### Backend 
+### Backend
 
 `/api`: A NodeJS API with [NestJS](https://docs.nestjs.com/)
 
 Details:
+
 - JSON should be the content type of all interactions
 
-### Database 
+### Database
 
 Scaffolded in `docker-compose.yml`: A MongoDB database
 
 Embedded in `api`: [Mongoose](https://mongoosejs.com/docs/typescript.html)
 
 Details:
+
 - If desired, you can switch to a DB you are more familiar with, and if necessary any ORM
 
-
-### Testing 
+### Testing
 
 This challenge only contains two places where tests are required (story 3/4).
 
@@ -94,11 +94,12 @@ Implemented in `api`: `yarn test:unit` or `yarn test:e2e`
 Using [Jest](https://jestjs.io/docs/getting-started#using-typescript-via-ts-jest) + [ts-jest](https://kulshekhar.github.io/ts-jest/docs/getting-started/installation)
 
 Details:
+
 - Tests can be at any level you see fit (unit, integration, e2e)
 
 # The Story
 
-You’ve been asked to build a new service that allows a solicitor to create legal job postings, and allows a client to pay for a job that has been undertaken. 
+You’ve been asked to build a new service that allows a solicitor to create legal job postings, and allows a client to pay for a job that has been undertaken.
 
 This requires delivering an API which satisfies the user stories outlined below.
 
@@ -119,6 +120,7 @@ As a client, I need to be able to see a list of legal job postings.
 ### Details
 
 A legal job posting contains:
+
 - A `title` (string)
 - A `description` (long string)
 - A `status` ('unpaid', 'paid')
@@ -132,7 +134,7 @@ Clients can use an endpoint to view a list of all job postings
 
 We receive new requirements that each job posting needs a new field to store a `fee structure` in the system.
 
-There are two types of `fee structure`: `No-Win-No-Fee`, or `Fixed-Fee`. 
+There are two types of `fee structure`: `No-Win-No-Fee`, or `Fixed-Fee`.
 
 - `No-Win-No-Fee` jobs require the parameter: `Fee Percentage`
 - `Fixed-Fee` jobs require the parameter `Fee Amount`
@@ -152,7 +154,7 @@ Consider how you might enforce the correctness of this field.
 
 ## Story 3:
 
-We receive new requirements that a client using the application needs to show that they have paid for a legal job posting. 
+We receive new requirements that a client using the application needs to show that they have paid for a legal job posting.
 
 Note: "Paying for" legal work doesn’t need to actually trigger any financial transfer / APIs - it just stores in the system that a job has been paid, and the amount that was paid.
 
@@ -166,13 +168,13 @@ As a client or solicitor, I need to be able to see how much was paid to the soli
 
 ### Details
 
-How a payment works depends on the type of job posting: 
+How a payment works depends on the type of job posting:
 
 #### For Fixed-Fee jobs:
 
 No inputs are required to complete the payment.
 
-The `amount paid` upon payment is the `fee amount`. 
+The `amount paid` upon payment is the `fee amount`.
 
 #### For No-Win-No-Fee jobs:
 
@@ -208,7 +210,7 @@ As a client, I need to be shown an error if I enter a `settlement amount` which 
 
 Change the payment command to include logic for: If the `Settlement Amount` entered is not within 10% of the `Expected Settlement Amount`, the payment should fail with an error.
 
-There should be tests validating the calculation that if the `settlement amount` is outside of 10% of the `expected settlement amount`, the operation would fail. 
+There should be tests validating the calculation that if the `settlement amount` is outside of 10% of the `expected settlement amount`, the operation would fail.
 Alternatively, it should test for valid `settlement amounts` within 10%.
 
 Consider how you might build this logic in a way that allows for testability and changing requirements in future.
@@ -228,9 +230,9 @@ As a client, I would like to see a relevant summary of the news article in a job
 ### Details
 
 Some examples sources of legal job postings are the following articles:
+
 - [https://www.bbc.co.uk/news/world-59793040](https://www.bbc.co.uk/news/world-59793040)
 - [https://www.bbc.co.uk/news/business-60667173](https://www.bbc.co.uk/news/business-60667173)
-
 
 These news articles contain a description of a legal issue that is relevant to a job posting a solicitor wants to make.
 
@@ -242,14 +244,328 @@ Display the contents of the news article alongside the job posting in the list.
 
 ---
 
-# Your TODO 
+# [x] Initial codebase setup (hello world)
 
-- [x] Initial codebase setup (hello world)
-- [ ] Story 1 
-- [ ] Story 2
-- [ ] Story 3
-- [ ] Story 4
-- [ ] Story 5
+# [x] Story 1
 
-- [ ] Written notes on incomplete stories
-- [ ] Written notes on weaknesses, tradeoffs and improvements
+The API endpoints needed to achieve the brief requirements are:
+
+- a POST endpoint to add a legal job posting: `POST /postings`
+- a GET endpoint to get a list of legal job postings: `GET /postings`
+
+If I were to work on a real project with a ticket like this, I would verify that the acceptance criteria I refined below were what was actually required by the business, by engaging with the product owner or equivalent.
+
+## Dependency changes
+
+- added `class-validator` and `class-transformer` for easy request validation and enforcement
+- added `@nestjs/jwt`, `@nestjs/passport`, `passport`, `passport-google-oauth20`, and `passport-jwt` to support Google authentication
+- added `config` and `@types/config` to manage configuration
+- aded `@nestjs/mongoose` for the schema type anotations. I added the version corresponding to the existing nestjs modules, but since those were one major version old, i also had to downgrade `mongoose` one version from what this project came with to match the required version needed by `nestjs/mongoose`
+
+## POST /postings
+
+### Authentication
+
+I used `passport.js` to authenticate the solicitor making the listings, using the Google Auth strategy. If you want to run this server yourself you need to set up a Google OAuth client ID at `https://console.cloud.google.com/apis/dashboard` , then acquire the `GOOGLE_CLIENT_ID` and a `GOOGLE_SECRET_ID` to populate in your local config.
+
+Roughly, the steps to do this are:
+
+- make a copy of `api/config/default.json` in `api/config/local.json`. Whatever config is in the local file will overwrite the default file.
+- go to the link above, and create a project if you do not have one already
+- Click on the `OAuth consent screen` tab and follow the prompts. Select `External` user type, leave the optional fields blank, and the other mandatory fields are self explanatory. The only notable optional configuration is the test users, to add if you would like OAuth to work with other google accounts in dev
+- Click on the `Credentials` tab, create a new OAuth client ID, select `Web Application` application type, fill in the mandatory fields, and add `http://localhost:4000/google/redirect` as an Authorised redirect URI
+- When created, copy-paste the Client ID and Client Secret into `api/config/local.json`
+
+When your local server is running, visit `http://localhost:4000/google/redirect` in your browser to get an Authentication Bearer token (replacing this step is on the list of future improvements). Copy paste the Authentication token and use it to use the `POST /postings endpoint`. If you are using Postman to send the POST request, click on the Authorization tab on your request, choose Bearer Token from the Type dropdown, and paste your token into Postman.
+
+### Assumptions:
+
+- the solicitor posting can be uniquely identified by their email (in practice this isn't a great assumption since it means users cannot change their account's email without some extra email change handling code- but it is pretty common)
+- the client who the job is for also can also be uniquely identified by their email
+- the description field can be limited to under 4000 characters
+- title can be limited to between 5 and 100 characters
+- can't guarantee the title is unique
+- idempotency is not required (see the Deliveroo incident in the notes below and why it should be required and why this is a future improvement)
+- tests are not required for Story 1 of this assignment
+- Swagger documentation or other documentation beyond these notes is not required
+- these assumptions and acceptance criteria below have been verified/confirmed by the product owner
+
+### Proposed schema for a legal job posting:
+
+- `_id` (ObjectID) field
+- `title` (string limited to between 5 and 100 characters)
+- `description` (string below 4000 characters)
+- `status` (string enum, 'unpaid' or 'paid')
+- `created` (date)
+- `posterEmail`(email string)
+- `clientEmail` (email string)
+
+### Acceptance criteria:
+
+- should be able to send the `title`, `description`, and `clientEmail` fields as strings in the API request body
+- all 3 fields are mandatory for a valid request and they have to fit the correct format
+- when the API inserts a valid request into the database, all other fields should also be generated/populated: `status` should start as `unpaid`, `created` should be the current timestamp, `postedEmail` should be the email of the solicitor listing the posting (aquired from auth), and `_id` should be generated by mongo
+- returns `Created (201)` when called with a valid request, with the response body containing the created legal job posting
+- returns `Unauthorized (401)` when called by a user that is not authenticated
+- returns `Bad Request (400)` when called with an invalid request with a missing or non-string `title` field, with an informative error message in the response body
+- returns `Bad Request (400)` when called with an invalid request with a missing or non-string `description` field, with an informative error message in the response body
+- returns `Bad Request (400)` when called with an invalid request with a missing or non-string or non-email string `clientEmail` field, with an informatinve error message in the response body
+- returns `Internal Server Error (500)` when called with a valid request that can't be recorded due to the database being down or not reachable, but without mentioning that the db is down
+
+### The Deliveroo Incident and why idempotency in POST requests like this is important
+
+[Tom Scott video](https://www.youtube.com/watch?v=IP-rGJKSZ3s) (TLDW: One evening a bug in the Deliveroo app told users there was an error submitting their order and prompted them to resubmit their order, even when the submition actually succeeded. This resulted in many duplicate orders being placed and fulfilled. To avoid this Deliveroo could have used an idempotency key, to allow duplicate requests to be ignored.)
+
+Due to this I really think an indempotency key really should be a future improvement to this POST endpoint.
+
+### Future improvements
+
+- idempotency key/token
+- other login strategies
+- saving the token as a cookie instead of returning it in the request body
+- wrapping the `config` node package into a `configService`
+- cause the server to log and error and cancel start up if a required config field is not set
+- breakign up `app.module.ts` into app.module + authentication.module + postings.module
+- using something other than email to uniquely identify solicitors and clients
+- have a users table/db and check that people logging in are present there before granting bearer tokens. currently we rely on google doing everything
+- add extra login strategies (namely local)
+- rename `google.controller.ts` to `auth.controller.ts` when it grows to include other strategies
+
+## GET /postings:
+
+### Assumptions
+
+- the solicitor posting can be uniquely identified by their email (in practice this isn't a great assumption since it means users cannot change their account's email without some extra email change handling code- but it is pretty common)
+- the client who the job is for also can also be uniquely identified by their email
+- there is no max limit requirement
+- tests are not required for Story 1
+- Swagger documentation or other documentation beyond these notes is not required
+- these assumptions and acceptance criteria below have been verified/confirmed by the product owner
+
+### Acceptance criteria:
+
+- request optional body parameters:
+  - `sortBy` (string enum) - what to order the returned postings by. permitted values so far: 'created', 'title'. defaults to 'title'
+  - `sortOrder` (string enum) - which way to order the returned postings. permitted values: 'asc', 'desc'. defaults to 'desc'
+  - `limit` (integer) - how many postings to return at most. has to be > 0 if present. defaults to 20
+  - `offset` (integer) - specifies how many postings to skip from the sort order (enables pagination). has to be >= 0 if present. defaults to 0.
+  - `posterEmail` (email string) - restricts the response to postings made by a specific solicitor. This will be required by the front-end showing the solicitor's view, since a specific solicitor will want to see their own postings specifically. Will not affect the return when missing from the request.
+  - `clientEmail` (email string) - similar to the above, but for the client. Will not affect the return when missing from the request.
+- the return format is an array of postings (see postings schema above)
+- sorting, limiting, and offsetting should not be done by the node server, since that would require the node server to fetch the entire database every call. instead, the DB should be performign the sorting, limiting, and offsetting, so that there can be a performance/scallability gain from using db indices
+- returns `OK (200)` when called with an empty request, with a list of up to 20 requests in the request body
+- returns `OK (200)` and with the postings in the desired sort order, when called with the `sortBy` and `sortOrder` parameters
+- returns `OK (200)` and with up to as many postings as permitted by the `limit` parameter, when called with a `limit` parameter
+- returns `OK (200)` and with the right number of `skipped` postings, when called with an `offset` parameter
+- returns `OK (200)` and with only the postings of a specific solicitor when the `posterIdFk` field is present in the request
+- returns `OK (200)` and with only the postings about a specific client when the `clientIdFk` field is present in the request
+- returns `Bad Request (400)` when called with a `sortBy` parameter with an unsupportedvalue (present but not one of the permitted strings), with an informative error message in the response body
+- returns `Bad Request (400)` when called with a `sortOrder` parameter with an unsupported value (present but not one of the permitted strings), with an informative error message in the response body
+- returns `Bad Request (400)` when called with a `limit` parameter with an unsupported value (present but not an integer, or not >0), with an informative error message in the response body
+- returns `Bad Request (400)` when called with an `offset` parameter with an unsupported value (present but not an integer, or not >=0), with an informative error message in the response body
+- returns `Bad Request (400)` when called with an `posterEmail` parameter with an unsupported value (not an email string) in the response body
+- returns `Bad Request (400)` when called with an `posterEmail` parameter with an unsupported value (not an email string) in the response bodyinformative error message in the response body
+- returns `Internal Server Error (500)` on a db error
+
+### Future improvements
+
+- more available sortOrders
+- Redis or similar caching layer
+- there likely will be an UI page that will show the solicitor or client a single specific job listing they have clicked on. To support this this endpoints needs to also accept requests with an '\_id' field or similar, so that the frontend can request a specific legal job
+- set a max limit so that the db doesn't get accidentally or maliciously overloaded
+- allow the client to filter on the `status` field
+- allow the client to wildcard search `title` or `description`
+- escape inputs - while not as necessary as when using a SQL db, the client might not escape the data we send them before using it
+
+# [x] Story 2
+
+This story requires a modification to the `POST /postings` endpoint. The `GET /postings` endpoint will automatically return listings in the new format when the db is updated, meeting the 'I need to be able to view' requirements.
+
+## Assumptions:
+
+- updating an existing database with legal job postings in the legacy format to the new format is out of scope for this story/ticket. this is something that will be handled by a story/ticket outside this assignment, or handled by re-starting with a blank db
+- `GET /postings` does not need to return `Service Unavailable (503)` if the db it is connected to still has listings using the old schema
+- tests are not required for Story 2 of this assignment
+- Swagger documentation or other documentation beyond these notes is not required
+- these assumptions and acceptance criteria below have been verified/confirmed by the product owner
+
+## Schema Change:
+
+The schema of a legal job listing needs the following new fields to accomodate this change in requirements:
+
+- A `feeStructure` (string enum) mandatory field, either `No-Win-No-Fee` or `Fixed-Fee`. This field is not exactly mandatory since it can be computed based on if a feeAmount or a feePercentage is present, but I think the code would be easier to understand if we just have this in.
+- A `feeAmount` (number) field, mandatory when `feePercentage` is not present
+- A `feePercentage` (number between 0.0 and 1.0, max 3 dp.) field, mandatory when `feeAmount` is not present
+
+## Correctness Enforcement
+
+It is relatively simple to ensure `feeStructure` will be one of the two permitted values:
+
+```ts
+  @IsString()
+  @IsIn(['Fixed-Fee', 'No-Win-No-Fee'])
+  feeStructure: string;
+```
+
+In a similar way we can ensure the adequate companion field is present, by marking both as required unless `feeStructure` is the other value, using the ValidateIf decorator:
+
+```ts
+  @IsNumber({
+    allowNaN: false,
+    allowInfinity: false,
+    maxDecimalPlaces: 2,
+  })
+  @ValidateIf((o) => o.feeStructure === 'Fixed-Fee')
+  feeAmount?: number;
+
+  @IsNumber({
+    allowNaN: false,
+    allowInfinity: false,
+    maxDecimalPlaces: 3,
+  })
+  @Max(1.0)
+  @Min(0.0)
+  @ValidateIf((o) => o.feeStructure === 'No-Win-No-Fee')
+  feePercentage?: number;
+```
+
+What the above doesn't do however is check that `feeAmount` and `feePercentage` are not both present. To enforce one and only one being present, I have added the following check in the request controller:
+
+```ts
+if (
+  typeof createPostingDto.feeAmount !== "undefined" &&
+  typeof createPostingDto.feePercentage !== "undefined"
+) {
+  throw new BadRequestException(
+    "feeAmount and feePercentage must not both be present"
+  );
+}
+```
+
+## `POST /postings` Acceptance Criteria (additional):
+
+- returns `OK (201)` when called with a valid request, with the created legal job posting in the return body
+- returns `Bad Request (400)` when called without the `feeStructure` field present in the request
+- returns `Bad Request (400)` when called with a request where the `feeStructure` field is not one of the two permitted values
+- returns `Bad Request (400)` when called with a request with the `feeStructure` field set to `No-Win-No-Fee` and with a missing or invalid `feePercentage` field
+- returns `Bad Request (400)` when called with a request with the `feeStructure` field set to `Fixed-Fee` and with a missing or invalid `feeAmount` field
+- returns `Bad Request (400)` when called with a request containing both `feeStructure` and `feeAmount`
+
+## `GET /postings` Acceptance Criteria (additional):
+
+- (should be automatically met when the db gets listings updated to use the new schema. would require the tests to be updated if there were any)
+- when returning `OK (200)`, the returned legal job postings are now following the new schema
+
+## Suggested future improvements
+
+- add a filter to the `GET /postings` to only get listings with a specific `feeStructure`
+- add `sortBy` request options for `feeStructure`, `feeAmount`, `feeStructure` in the `GET /postings` endpoint
+- check schema compliance when inserting into db also, not just when the request comes in
+
+# [x] Story 3
+
+This story requires a new endpoint that will handle the payment. Some users stories require the `GET /postings` endpoint to return additional data, which will happen automatically after we update the schema and refresh the db.
+
+## Assumptions:
+
+- updating an existing database with legal job postings in the legacy format to the new format is out of scope for this story/ticket. this is something that will be handled by a story/ticket outside this assignment, or handled by re-starting with a blank db
+- `GET /postings` does not need to return `Service Unavailable (503)` if the db it is connected to still has listings using the old schema
+- tests **are** required for Story 3 of this assignment
+- e2e tests are sufficient for Story 3 of this assignment
+- Swagger documentation or other documentation beyond these notes is not required
+- these assumptions and acceptance criteria below have been verified/confirmed by the product owner
+- the first story mentioned that clients are unauthorised/authenticated users. Since this story requires both the clients and the solicitors to have access to this new endpoint, then this endpoint should not be covered by an authguard
+
+## Security
+
+Due to the assumption above this endpoint should not be secured for this task. While this might be alright for a prototype used as a demo, this endpoint really has to be secured. To do that I would add the same authguard that is present on `POST /postings` as well as add a check on the server that the user submitting this POST is either the solicitor or the client assigned to the job.
+
+## Schema Change:
+
+The schema of a legal job listing needs the following new fields to accomodate this change in requirements:
+
+- An optional `amountPaid` (number) field, present after payment
+- An optional `settlementAmount` (number) field, present after payment on all `No-Win-No-Pay` jobs
+- An optional `paidOn` (date) field, present on all jobs that have been paid. With this field a future developer will be able to derive the exact timeframe a job was in the `unpaid` stage and the wohle status history.
+
+Another option to this schema change would have been to create a new `Payment` schema, separate from the `Posting` schema. I felt like this app is simple enough to not really benefit from that added complexity, but more mature apps possibly would.
+
+A third option would have been to nest all three of these fields under a `payment` field on the `Posting` schema. This would have been a middle ground aproach between the two options above.
+
+## `POST /postings/payment` or `PATCH /postings`
+
+Technically using POST for this endpoint goes against the REST standard, since PATCH should be the verb used to create a change to a resource. POST should technically only be used to create new resources, not update existing resources.
+
+However I think POST fits much better here. For one the request will create a lot of new fields and someone could argue `resources` in this tech stack doesn't necessarily mean a document in the db, it could also mean a field or group of fields in a document.
+
+Thinking ahead, if this prototype ends up successful and we had to scale it, sooner or later the payment information would grow and eventually it will be refactored away from the `Posting` schema and into one of its own. Should that happen the POST request would be more adequate to use for sure.
+
+## `POST /postings/payment`Acceptance Criteria:
+
+- returns `Created (201)` when called with a valid request with the `_id` of an `unpaid` `Fixed-Fee` job
+- returns `Created (201)` when called with a valid request with the `_id` of an `unpaid` `No-Win-No-Fee` job, including with `settlementAmount` field
+- returns `Bad Request (400)` when called with the `_id` not belonging to any job
+- returns `Bad Request (400)` when called on a job that has already been paid, with an appropriate error message in the request body
+- returns `Bad Request (400)` when called on a `No-Win-No-Fee` job with a request lacking a valid `settlementAmount` field
+- returns `Internal Server Error (500)` on a db error
+
+## Future improvements
+
+- separate `Payments` schema
+- stripe
+- security (see paragraph above)
+- `status` is no longer really needed and can be removed, since the presence of `paidOn` tracks pretty much the exact same thing
+
+## e2e testing
+
+To run the e2e tests you need to have the local MongoDB running. I considered writing unit tests instead to not have this requirement, but e2e tests are much more comprehensive. A possible future improvement could be to use an in-memory MongoDB instance that starts up with the tests and gets automatically deleted afterwards, to remove the dependency on a pre-existing local MongoDB.
+
+Another possible future improvement would be to have e2e tests that are story-based instead of endpoint based. For instance, at the moment my e2e tests are focused on the specific endpoint implemented for story 3, however it would be better if the e2e tests were the based on the stories for story 3.
+
+`yarn test:e2e`
+
+# [x] Story 4
+
+## Assumptions:
+
+- tests are required for Story 4 of this assignment
+- e2e tests are sufficient
+- Swagger documentation or other documentation beyond these notes is not required
+- these assumptions and acceptance criteria below have been verified/confirmed by the product owner
+
+## Schema change
+
+The schema of a legal job listing needs the following new fields to accomodate this change in requirements:
+
+- a `expectedSettlementAmount` (number) field, mandatory for `No-Win-No-Fee` jobs but optional otherwise (a possible future improvement would be to nto use floats for this field)
+
+## POST /postings Acceptance Criteria (additional):
+
+- returns `Created (201)` when called with a valid `Fixed-Fee` job request, even without an `expectedSettlementAmount`
+- returns `Created (201)` when called with a valid `No-Win-No-Fee` job request (including a valid `expectedSettlementAmount`)
+- returns `Bad Request (400)` when called with a `No-Win-No-Fee` job request that doesn't include a valid `expectedSettlementAmount`
+
+## POST /postings/payment Acceptance Criteria (additional):
+
+- checks the `settlementAmount` does not differ by more than 10% from the expected settlement amount before returning any `Created (201)`
+- if the settlement amount is not close enough to the expected settlement amount, the DB is not updated and the endpoint returns with `Bad Request (400)`. the resonse body should contain an appropriate error message, as well as `minSettlementAmount` and `maxSettlementAmount`
+
+## Allowing for changing requirements in the future
+
+By getting the 10% threshold from the `config` package config manager I allowed for changes to be made to this threshold in the future, without also having to rewrite the e2e tests. The tests I have written get this threshold from the config manager also, so when it will change, so will my tests.
+
+# [x] Story 5
+
+Incomplete story, however to complete this story I would first have to decide what I would use the to persist the URL contents. If storing the contents is a must, MongoDB will likely not be good enough for this since images will likely bring the size of a document above the 16 MB limit that mongodb has. If the requirements permit storing the articles without pictures, then perhaps they would fit in Mongo.
+
+Furthermore storing URLs would be vastly easier than having to store articles. While the brief has mentioned that storing the entire contents of the articles is required for user experience, persistence, and searchability reasons, I would still prefer to only store URLs. I would suggest to the product owner the alternative approach of using an existing free web archiving site to archive these news articles, storing the URLs to the archives we made in our mongo db, then fetching the contents of the web archive whenever a user requests it.
+
+This approach is much easier to implement, while still meeting all of the business requirements (in my view).
+
+# [x] Written notes on incomplete stories
+
+Story 5
+
+# [x] Written notes on weaknesses, tradeoffs and improvements
+
+Notes on improvements, weaknesses, and tradeoff acompany each of the stories above.

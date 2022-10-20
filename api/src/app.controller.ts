@@ -1,19 +1,17 @@
-import { Controller, Get } from '@nestjs/common'
-import { AppService } from './app.service'
-import mongoose from 'mongoose'
+import { Controller, Get, UseGuards } from '@nestjs/common';
+
+import { AppService } from './app.service';
+import { JwtAuthGuard } from './authentication/jwt.authguard';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   getHello() {
-    // __MONGO_URI__ is set during e2e testing
-    const mongoUri = (global as any).__MONGO_URI__ || 'mongodb://root:root@localhost:27017/'
-    mongoose.connect(mongoUri)
-    
     return {
-      message: this.appService.getHello()
-    }
+      message: this.appService.getHello(),
+    };
   }
 }
