@@ -50,6 +50,15 @@ export class CreatePostingDto {
   @Min(0.0)
   @ValidateIf((o) => o.feeStructure === 'No-Win-No-Fee')
   feePercentage?: number;
+
+  @IsNumber({
+    allowNaN: false,
+    allowInfinity: false,
+    maxDecimalPlaces: 2,
+  })
+  @Min(0.0)
+  @ValidateIf((o) => o.feeStructure === 'No-Win-No-Fee')
+  expectedSettlementAmount?: number;
 }
 
 export class GetPostingsDto {

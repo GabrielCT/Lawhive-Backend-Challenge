@@ -520,10 +520,52 @@ Thinking ahead, if this prototype ends up successful and we had to scale it, soo
 
 To run the e2e tests you need to have the local MongoDB running. I considered writing unit tests instead to not have this requirement, but e2e tests are much more comprehensive. A possible future improvement could be to use an in-memory MongoDB instance that starts up with the tests and gets automatically deleted afterwards, to remove the dependency on a pre-existing local MongoDB.
 
+Another possible future improvement would be to have e2e tests that are story-based instead of endpoint based. For instance, at the moment my e2e tests are focused on the specific endpoint implemented for story 3, however it would be better if the e2e tests were the based on the stories for story 3.
+
 `yarn test:e2e`
 
-- [ ] Story 4
-- [ ] Story 5
+# [x] Story 4
 
-- [ ] Written notes on incomplete stories
-- [ ] Written notes on weaknesses, tradeoffs and improvements
+## Assumptions:
+
+- tests are required for Story 4 of this assignment
+- e2e tests are sufficient
+- Swagger documentation or other documentation beyond these notes is not required
+- these assumptions and acceptance criteria below have been verified/confirmed by the product owner
+
+## Schema change
+
+The schema of a legal job listing needs the following new fields to accomodate this change in requirements:
+
+- a `expectedSettlementAmount` (number) field, mandatory for `No-Win-No-Fee` jobs but optional otherwise (a possible future improvement would be to nto use floats for this field)
+
+## POST /postings Acceptance Criteria (additional):
+
+- returns `Created (201)` when called with a valid `Fixed-Fee` job request, even without an `expectedSettlementAmount`
+- returns `Created (201)` when called with a valid `No-Win-No-Fee` job request (including a valid `expectedSettlementAmount`)
+- returns `Bad Request (400)` when called with a `No-Win-No-Fee` job request that doesn't include a valid `expectedSettlementAmount`
+
+## POST /postings/payment Acceptance Criteria (additional):
+
+- checks the `settlementAmount` does not differ by more than 10% from the expected settlement amount before returning any `Created (201)`
+- if the settlement amount is not close enough to the expected settlement amount, the DB is not updated and the endpoint returns with `Bad Request (400)`. the resonse body should contain an appropriate error message, as well as `minSettlementAmount` and `maxSettlementAmount`
+
+## Allowing for changing requirements in the future
+
+By getting the 10% threshold from the `config` package config manager I allowed for changes to be made to this threshold in the future, without also having to rewrite the e2e tests. The tests I have written get this threshold from the config manager also, so when it will change, so will my tests.
+
+# [x] Story 5
+
+Incomplete story, however to complete this story I would first have to decide what I would use the to persist the URL contents. If storing the contents is a must, MongoDB will likely not be good enough for this since images will likely bring the size of a document above the 16 MB limit that mongodb has. If the requirements permit storing the articles without pictures, then perhaps they would fit in Mongo.
+
+Furthermore storing URLs would be vastly easier than having to store articles. While the brief has mentioned that storing the entire contents of the articles is required for user experience, persistence, and searchability reasons, I would still prefer to only store URLs. I would suggest to the product owner the alternative approach of using an existing free web archiving site to archive these news articles, storing the URLs to the archives we made in our mongo db, then fetching the contents of the web archive whenever a user requests it.
+
+This approach is much easier to implement, while still meeting all of the business requirements (in my view).
+
+# [x] Written notes on incomplete stories
+
+Story 5
+
+# [x] Written notes on weaknesses, tradeoffs and improvements
+
+Notes on improvements, weaknesses, and tradeoff acompany each of the stories above.

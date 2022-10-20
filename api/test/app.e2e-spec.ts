@@ -189,6 +189,7 @@ describe('AppController (e2e)', () => {
         clientEmail: 'clientEmailTest@example.com',
         feeStructure: 'No-Win-No-Fee',
         feePercentage: 0.11,
+        expectedSettlementAmount: 50000,
       },
       'solicitorEmailTest@example.com',
     );
@@ -211,6 +212,7 @@ describe('AppController (e2e)', () => {
         clientEmail: createdJob.clientEmail,
         feeStructure: createdJob.feeStructure,
         feePercentage: createdJob.feePercentage,
+        expectedSettlementAmount: 50000,
         created: createdJob.created.toISOString(),
         posterEmail: createdJob.posterEmail,
         status: createdJob.status,
@@ -260,6 +262,7 @@ describe('AppController (e2e)', () => {
         clientEmail: 'clientEmailTest@example.com',
         feeStructure: 'No-Win-No-Fee',
         feePercentage: 0.11,
+        expectedSettlementAmount: 50000,
       },
       'solicitorEmailTest@example.com',
     );
@@ -274,6 +277,122 @@ describe('AppController (e2e)', () => {
         message:
           'No-Win-No-Fee jobs require settlementAmount in the payment submission',
         error: 'Bad Request',
+      });
+  });
+
+  it('/postings/payment(POST) - settlementAmount for No-Win-No-Fee jobs are constrained to the allowed range', async () => {
+    const expectedSettlementAmount = 50000;
+    const allowedDivergence = parseFloat(
+      config.get('maxSettlementDivergenceFromExpected'),
+    );
+    // creating two jobs to test both the lower and higher bounds
+    const createdJobForLower = await postingsService.create(
+      {
+        title: 'title test',
+        description: 'description test',
+        clientEmail: 'clientEmailTest@example.com',
+        feeStructure: 'No-Win-No-Fee',
+        feePercentage: 0.11,
+        expectedSettlementAmount,
+      },
+      'solicitorEmailTest@example.com',
+    );
+    const createdJobForUpper = await postingsService.create(
+      {
+        title: 'title test',
+        description: 'description test',
+        clientEmail: 'clientEmailTest@example.com',
+        feeStructure: 'No-Win-No-Fee',
+        feePercentage: 0.11,
+        expectedSettlementAmount,
+      },
+      'solicitorEmailTest@example.com',
+    );
+
+    // checking for 400 error when below the lower bound
+    await request(app.getHttpServer())
+      .post('/postings/payment')
+      .send({
+        _id: createdJobForLower._id,
+        settlementAmount:
+          expectedSettlementAmount * (1 - allowedDivergence - 0.01),
+      })
+      .expect(400)
+      .expect({
+        error:
+          'settlementAmount must be at least minSettlementAmount and at most maxSettlementAmount',
+        minSettlementAmount: Math.round(
+          expectedSettlementAmount * (1 - allowedDivergence),
+        ),
+        maxSettlementAmount: Math.round(
+          expectedSettlementAmount * (1 + allowedDivergence),
+        ),
+      });
+
+    // checking for 201 success when just above the lower bound
+    await request(app.getHttpServer())
+      .post('/postings/payment')
+      .send({
+        _id: createdJobForLower._id,
+        settlementAmount:
+          expectedSettlementAmount * (1 - allowedDivergence + 0.01),
+      })
+      .expect(201)
+      .expect({
+        _id: createdJobForLower._id.toString(),
+        title: createdJobForLower.title,
+        description: createdJobForLower.description,
+        clientEmail: createdJobForLower.clientEmail,
+        feeStructure: createdJobForLower.feeStructure,
+        feePercentage: createdJobForLower.feePercentage,
+        expectedSettlementAmount,
+        created: createdJobForLower.created.toISOString(),
+        posterEmail: createdJobForLower.posterEmail,
+        status: createdJobForLower.status,
+        __v: createdJobForLower.__v,
+      });
+
+    // checking for 400 error when above the upper bound
+    await request(app.getHttpServer())
+      .post('/postings/payment')
+      .send({
+        _id: createdJobForUpper._id,
+        settlementAmount:
+          expectedSettlementAmount * (1 + allowedDivergence + 0.1),
+      })
+      .expect(400)
+      .expect({
+        error:
+          'settlementAmount must be at least minSettlementAmount and at most maxSettlementAmount',
+        minSettlementAmount: Math.round(
+          expectedSettlementAmount * (1 - allowedDivergence),
+        ),
+        maxSettlementAmount: Math.round(
+          expectedSettlementAmount * (1 + allowedDivergence),
+        ),
+      });
+
+    // checking for 201 success when just below the upper bound
+    await request(app.getHttpServer())
+      .post('/postings/payment')
+      .send({
+        _id: createdJobForUpper._id,
+        settlementAmount:
+          expectedSettlementAmount * (1 - allowedDivergence + 0.01),
+      })
+      .expect(201)
+      .expect({
+        _id: createdJobForUpper._id.toString(),
+        title: createdJobForUpper.title,
+        description: createdJobForUpper.description,
+        clientEmail: createdJobForUpper.clientEmail,
+        feeStructure: createdJobForUpper.feeStructure,
+        feePercentage: createdJobForUpper.feePercentage,
+        expectedSettlementAmount,
+        created: createdJobForUpper.created.toISOString(),
+        posterEmail: createdJobForUpper.posterEmail,
+        status: createdJobForUpper.status,
+        __v: createdJobForUpper.__v,
       });
   });
 });

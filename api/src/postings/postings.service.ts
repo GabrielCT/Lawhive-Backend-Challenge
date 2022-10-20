@@ -5,6 +5,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as config from 'config';
 
 import { Posting, PostingDocument } from './posting.schema';
 import {
@@ -59,10 +60,37 @@ export class PostingsService {
       // ticket should have specified how to round this (whole number, round up, 2dp, etc), leaving as is for now
       // should also not really use floats..
 
-      if (typeof payPostingDto.settlementAmount === 'undefined') {
+      if (
+        typeof payPostingDto.settlementAmount === 'undefined' ||
+        typeof job.expectedSettlementAmount === 'undefined'
+      ) {
         // the dto prop guard ensured this will never happen, but typescript type checker still complains without this
         throw new InternalServerErrorException();
       }
+
+      const permittedDivergence = parseFloat(
+        config.get('maxSettlementDivergenceFromExpected'),
+      );
+
+      const minSettlementAmount: number = Math.round(
+        job.expectedSettlementAmount * (1 - permittedDivergence),
+      );
+      const maxSettlementAmount: number = Math.round(
+        job.expectedSettlementAmount * (1 + permittedDivergence),
+      );
+
+      if (
+        payPostingDto.settlementAmount > maxSettlementAmount ||
+        payPostingDto.settlementAmount < minSettlementAmount
+      ) {
+        throw new BadRequestException({
+          error:
+            'settlementAmount must be at least minSettlementAmount and at most maxSettlementAmount',
+          minSettlementAmount,
+          maxSettlementAmount,
+        });
+      }
+
       const amountPaid = job.feePercentage * payPostingDto.settlementAmount;
 
       return this.postingModel.findByIdAndUpdate(payPostingDto._id, {

@@ -41,6 +41,9 @@ export class Posting {
   settlementAmount?: number;
 
   @Prop({ required: false })
+  expectedSettlementAmount?: number;
+
+  @Prop({ required: false })
   paidOn?: Date;
 }
 
